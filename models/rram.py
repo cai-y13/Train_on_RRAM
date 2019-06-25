@@ -39,13 +39,15 @@ def linear_fixed_function(tensors, fixed_bits):
 
 
 def hardware_fixed_function(*tensors, fixed_bits, max_value=float('inf'), running_mode=True):
-    #step = 1 / (2 ** fixed_bits - 1)
+    max_num = 0
+    if running_mode == True:
+        for tensor in tensors:
+            if max_num < torch.max(tensor.abs()).item():
+                max_num = torch.max(tensor.abs()).item()
+    else:
+        max_num = max_value
     for tensor in tensors:
         #If input a max value, then use the defined scale. Otherwise, use the max value of the tensor.
-        if running_mode == True:
-            max_num = torch.max(tensor.abs()).item()
-        else:
-            max_num = max_value
         max_num = max(max_num, pow(2, -32))
         scale = pow(2, round(math.log2(max_num)))
         #if max_value > 1:
