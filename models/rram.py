@@ -53,7 +53,7 @@ def hardware_fixed_function(*tensors, fixed_bits, max_value=float('inf'), runnin
         #if max_value > 1:
         step = 1 / (2 ** fixed_bits)
         tensor.div_(scale)
-        tensor.clamp_(-1, 1).sub_(-1)
+        tensor.clamp_(-1, 1 - step).sub_(-1)
         tensor.div_(step).round_().mul_(step).add_(-1).mul_(scale)
 
 
